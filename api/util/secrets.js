@@ -16,5 +16,9 @@ module.exports = {
   DB_USER: process.env["DB_USER"],
   DB_HOST,
   DB_PASSWORD: process.env["DB_PASSWORD"],
-  DB_NAME: process.env["DB_NAME"]
+  DB_NAME: process.env["DB_NAME"],
+  TWOFACTOR_ACCOUNT_ID: process.env["TWOFACTOR_ACCOUNT_ID"],
+  TWOFACTOR_AUTH_TOKEN: process.env["TWOFACTOR_AUTH_TOKEN"],
+  TWOFACTOR_SOURCE_NUMBER: process.env["TWOFACTOR_SOURCE_NUMBER"],
+  TWOFACTOR_DESTINATION_NUMBER: process.env["TWOFACTOR_DESTINATION_NUMBER"]
 };
