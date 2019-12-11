@@ -7,11 +7,15 @@ const smsService = require("../services/sms_service");
 
 /* Register new user */
 router.post("/register", async (req, res) => {
-  const user = new User(req.body.email, req.body.password);
+  const user = new User(
+    req.body.email,
+    req.body.password,
+    req.body.mobileNumber
+  );
   user.confirmPassword = req.body.confirmPassword;
   try {
     await userService.registerUser(user);
-    res.status(201);
+    res.status(201).end();
   } catch (err) {
     res.json({ message: `${err.message}` });
   }
@@ -19,6 +23,23 @@ router.post("/register", async (req, res) => {
 
 /* Login existing user */
 router.post("/login", function(req, res, next) {
+  const user = new User(req.body.email, req.body.password);
+
+  try {
+    userService.authenticateUser(user);
+    const jwtToken = tokenService.generateUserToken(user);
+
+    res.json({
+      jwt: jwtToken
+    });
+  } catch (err) {
+    res.json({
+      message: `${err.message}`
+    });
+  }
+});
+
+router.post("/login/2factor", function(req, res, next) {
   const user = new User(req.body.email, req.body.password);
 
   try {

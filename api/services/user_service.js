@@ -1,6 +1,7 @@
 const userRepo = require("../data/repo/user_repo");
 const passwordService = require("../services/password_service");
 const validator = require("validator");
+const smsService = require("../services/sms_service");
 
 const MAX_PASSWORD_LENGTH = 25;
 const MIN_PASSWORD_LENGTH = 6;
@@ -26,13 +27,8 @@ function validateUserCredentials(user) {
   }
 }
 
-async function passwordIsCorrect(user) {
-  try {
-    const userFromDb = await userRepo.fetchUser(user.email);
-    return userFromDb.passwordHash === user.passwordHash;
-  } catch (err) {
-    throw new Error("Password was incorrect");
-  }
+function passwordIsCorrect(user, userFromDb) {
+  return userFromDb.passwordHash === user.passwordHash;
 }
 
 module.exports = {
@@ -47,7 +43,26 @@ module.exports = {
   },
   async authenticateUser(user) {
     user.password = passwordService.hashAndSalt(user.password);
-    passwordIsCorrect(user);
+    try {
+      const userFromDb = await userRepo.fetchUser(user.email);
+      return passwordIsCorrect(user, userFromDb);
+    } catch (err) {
+      throw new Error("Password was incorrect");
+    }
+  },
+  async twoFactorAuthenticateUser(user) {
+    user.password = passwordService.hashAndSalt(user.password);
+    try {
+      const userFromDb = await userRepo.fetchUser(user.email);
+
+      if (userFromDb.mobileNumber) {
+        smsService.verifySms(userFromDb.mobileNumber);
+      } else {
+        throw new Error("No mobile phone attached to this account.");
+      }
+    } catch (err) {
+      throw new Error("Password was incorrect");
+    }
   },
   async userList() {
     return await userRepo.fetchUsers();
