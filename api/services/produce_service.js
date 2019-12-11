@@ -8,9 +8,9 @@ const MAX_TYPE_LENGTH = MAX_NAME_LENGTH;
 
 function validateProduce(produce) {
   if (
-    typeof produce.priceInDollar === "number" &&
-    produce.priceInDollar > 0 &&
-    produce.priceInDollar < 10000
+    typeof produce.priceInDollar !== "number" ||
+    produce.priceInDollar < 0 ||
+    produce.priceInDollar > 10000
   ) {
     throw new Error(`Please specify a valid price.`);
   }
