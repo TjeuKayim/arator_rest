@@ -1,0 +1,8 @@
+{
+    "appService.zipIgnorePattern": [
+        "node_modules{,/**}",
+        ".vscode{,/**}"
+    ],
+    "appService.defaultWebAppToDeploy": "/subscriptions/8545721c-1708-465e-80cf-be2a62338ff7/resourceGroups/zieke_mannen/providers/Microsoft.Web/sites/aratorbackend",
+    "appService.deploySubpath": ""
+}
